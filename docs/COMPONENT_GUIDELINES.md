@@ -30,13 +30,18 @@ reads this before building or editing components (enforced via `CLAUDE.md`).
 
 ```
 src/
+├── pages/                   # routed views (one per screen/role), e.g. parent/
 ├── components/
 │   ├── ui/                  # shadcn primitives — vendored, leave alone
-│   └── <feature>/           # feature components, e.g. checkout/, dashboard/
-│       ├── cart-summary.tsx
-│       └── cart-item.tsx
+│   ├── layout/              # app shell: nav, sidebar, role switcher
+│   └── <feature>/           # feature components, e.g. transfer/, dashboard/
+│       ├── transfer-form.tsx
+│       └── transfer-row.tsx
+├── lib/
+│   ├── api/                 # typed MOCK data + service functions (no backend)
+│   └── utils.ts             # cn(), formatters
 ├── hooks/                   # reusable hooks: use-<thing>.ts
-├── lib/                     # utilities (cn, formatters, api clients)
+├── routes.tsx              # route table
 └── types/                   # shared TS types/interfaces (optional)
 ```
 
@@ -44,6 +49,52 @@ src/
 - Feature-specific components stay inside that feature folder. Promote to a
   shared location only when reused by 2+ features.
 - Co-locate a component's helpers/sub-parts in the same folder.
+- **Pages** are thin: they compose feature components and read from `lib/api/`.
+
+---
+
+## 2a. App structure & routing
+
+- Multi-screen apps use **React Router** (`react-router-dom`) — install it when
+  the LLD calls for more than one screen.
+- One **page component per route** in `src/pages/`; keep pages thin (compose
+  feature components, wire data).
+- A single **app shell/layout** in `src/components/layout/` holds nav and the
+  outlet. Role-based apps render nav/views per the active role.
+- Define the route table in `src/routes.tsx`; mount the router in `main.tsx`.
+- Access control is **UI-level only** (show/hide per role) — there is no real
+  auth. Use a simple role context/switcher to simulate Parent / Principal /
+  Ops Admin etc.
+
+## 2b. Mock data / API layer (frontend-only)
+
+We never call a real backend. All data lives behind `src/lib/api/`.
+
+- Export **typed service functions** (`async`) that return Promises and
+  **simulate latency** (e.g. `await sleep(300)`), so components use real
+  loading/error states.
+- Keep in-memory seed data in the same folder; mutations update that store.
+- Document assumptions at the top of each module (what a real backend would do).
+- Components/pages import from `@/lib/api/*` — never inline mock data in a
+  component.
+
+```ts
+// src/lib/api/transfers.ts — MOCK. Assumes a real /transfers service exists.
+export type TransferStatus = 'pending' | 'approved' | 'rejected' | 'completed'
+export type TransferRequest = { id: string; studentName: string; status: TransferStatus /* … */ }
+
+let store: TransferRequest[] = [/* seed */]
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+export async function listTransfers(): Promise<TransferRequest[]> {
+  await sleep(300)
+  return structuredClone(store)
+}
+export async function approveTransfer(id: string): Promise<void> {
+  await sleep(300)
+  store = store.map((t) => (t.id === id ? { ...t, status: 'approved' } : t))
+}
+```
 
 ---
 

@@ -1,13 +1,24 @@
 ---
 name: build-from-lld
-description: Use when implementing a React feature on the NTUC-SC scaffold from
-  an HLD/LLD design doc — enforces the shadcn-first, token-based component
-  structure and the repo's React standards end to end.
+description: Use when implementing a React feature OR an entire frontend app on
+  the NTUC-SC scaffold from an HLD/LLD design doc — enforces frontend-only
+  scope, the shadcn-first token-based structure, and the repo's React standards
+  end to end.
 ---
 
-# Building a feature from a design doc
+# Building from a design doc (feature or whole app)
 
-Follow this sequence. Do not skip steps.
+Follow this sequence. Do not skip steps. Works for one feature or the entire
+app — for a whole app, the unit of work is "all screens + shell + components."
+
+## Scope: FRONTEND ONLY
+
+- Build the UI only. The HLD/LLD may include a backend — **do not build it.**
+- Put all data behind a typed **mock API layer** in `src/lib/api/` (in-memory,
+  simulated latency). Notifications → `sonner`; audit → read-only view over mock
+  data; processing/"execution" → mock call that updates local state.
+- Document every assumption (top of the mock module + in your report).
+- See `CLAUDE.md` → "Scope: FRONTEND ONLY" and guidelines §2b.
 
 ## Skills & tools to use
 
@@ -29,17 +40,23 @@ Follow this sequence. Do not skip steps.
 
 ## 2. Plan the build
 
-- List every component from the LLD and its file path under
-  `src/components/<feature>/`.
+- Derive the **screens/routes** and **roles** from the HLD/LLD. For a whole app,
+  plan: the app shell/layout, the route table, one page per screen, and the
+  mock API modules — then the components.
+- List every component from the LLD and its file path (`src/pages/` for routed
+  views, `src/components/<feature>/` for feature components).
 - List the shadcn primitives each one needs.
 - Identify which components are **independent** (no shared in-progress state) —
   these can be delegated to parallel `component-builder` subagents.
 
-## 3. Provision primitives
+## 3. Provision primitives & foundation
 
 - For each missing shadcn primitive: `npx shadcn@latest add <name>`.
 - Use the shadcn MCP to find the right registry item when unsure.
 - Never hand-write a primitive that shadcn provides.
+- If the app has multiple screens, install React Router and set up the mock API
+  layer (`src/lib/api/`), route table (`src/routes.tsx`), and app shell first —
+  pages and components build on top. See guidelines §2a and §2b.
 
 ## 4. Build
 

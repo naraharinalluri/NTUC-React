@@ -4,6 +4,21 @@ React 19 + Vite + TypeScript (strict) + Tailwind CSS v4 + shadcn/ui (Radix base)
 
 These instructions are **mandatory**, not suggestions. Follow them on every task.
 
+## Scope: FRONTEND ONLY (REQUIRED)
+
+This repo is a **frontend React SPA**. We build the UI and nothing else.
+
+- The HLD/LLD **may describe a backend** (APIs, services, databases, workflow
+  engines, notifications, audit stores). **Do NOT build any of it.**
+- Stub all data and side effects behind a **typed mock API layer** in
+  `src/lib/api/` (in-memory data, simulated latency, no network). The UI talks
+  only to this layer.
+- Backend-ish requirements map to frontend equivalents: notifications → toast
+  (`sonner`); audit trail → a read-only view over mock data; "execution" /
+  processing → a mock call that updates local state and status.
+- **Document every such assumption** at the top of the relevant mock module and
+  call them out when reporting work. When in doubt, mock it and note it.
+
 ## Component & code standards (REQUIRED)
 
 All component work MUST follow @docs/COMPONENT_GUIDELINES.md. Read it before
@@ -27,13 +42,18 @@ The non-negotiable rules, summarized:
 
 ## Design documents
 
-When implementing a feature, read the relevant design docs first:
+The HLD/LLD are the source of truth for what to build. Read them first:
 
 - High-level design: `docs/HLD.md`
 - Low-level design: `docs/LLD.md`
 
 (These are read on demand — they are not auto-loaded — so open them explicitly
 when a task references them.)
+
+We build the **entire frontend app** described by these docs — routing, an app
+shell/layout, role-based views (`src/pages/`), and all components — not just a
+single feature. Use React Router for multiple screens. `/build-app` runs the
+whole thing; `/feature <name>` builds one slice.
 
 ## Skills & tools to use
 
@@ -71,4 +91,5 @@ For any non-trivial feature:
 - `npm run build` — type-check + production build
 - `npm run lint` — ESLint
 - `npm run test:run` — run tests once (CI); `npm test` — watch mode
-- `/feature <name>` — implement a feature from the design docs
+- `/build-app` — build the entire frontend app from the HLD/LLD
+- `/feature <name>` — implement a single feature/slice from the design docs
