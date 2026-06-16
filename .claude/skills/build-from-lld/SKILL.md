@@ -31,7 +31,9 @@ app — for a whole app, the unit of work is "all screens + shell + components."
 
 ## 1. Read the design
 
-- Read `docs/HLD.md` and `docs/LLD.md` (or the specific sections referenced).
+- Discover all design docs: `ls docs | grep -iE 'hld|lld'` (top-level `docs/`
+  only). Filenames vary but contain `hld`/`lld`, and there may be several of
+  each — read every match. Ignore `docs/templates/`.
 - Read `docs/COMPONENT_GUIDELINES.md` — these rules are mandatory.
 - If anything is ambiguous, use the **brainstorming** skill before coding.
 - For new/unspecified UI, use the **frontend-design** skill to settle layout,

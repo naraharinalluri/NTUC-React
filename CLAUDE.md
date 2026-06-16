@@ -42,13 +42,19 @@ The non-negotiable rules, summarized:
 
 ## Design documents
 
-The HLD/LLD are the source of truth for what to build. Read them first:
+The HLD/LLD docs in `docs/` are the source of truth for what to build. Read
+them first.
 
-- High-level design: `docs/HLD.md`
-- Low-level design: `docs/LLD.md`
+- There may be **one or more** HLD and LLD documents. Filenames vary, but each
+  contains **`hld`** or **`lld`** (case-insensitive) — e.g.
+  `docs/student-transfer-HLD.md`, `docs/transfer_lld_v2.md`.
+- **Discover and read them all** at the start of a task:
+  `ls docs | grep -iE 'hld|lld'` (top-level `docs/` only). Read every match —
+  there may be several of each, and they may overlap or supersede one another.
+- Reference templates live in `docs/templates/` — **ignore them as inputs.**
 
-(These are read on demand — they are not auto-loaded — so open them explicitly
-when a task references them.)
+(These are read on demand — not auto-loaded — so open them explicitly when a
+task references them.)
 
 We build the **entire frontend app** described by these docs — routing, an app
 shell/layout, role-based views (`src/pages/`), and all components — not just a

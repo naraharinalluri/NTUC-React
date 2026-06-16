@@ -7,8 +7,10 @@ Implement the **$1** feature on this scaffold.
 
 Use the `build-from-lld` skill and follow `docs/COMPONENT_GUIDELINES.md`.
 
-1. Read `docs/HLD.md` and `docs/LLD.md` for the **$1** feature. If the relevant
-   sections are missing or unclear, ask me before proceeding.
+1. Discover and read the design docs (`ls docs | grep -iE 'hld|lld'`, top-level
+   `docs/` only; there may be several, names vary but contain `hld`/`lld`) for
+   the **$1** feature. Ignore `docs/templates/`. If the relevant sections are
+   missing or unclear, ask me before proceeding.
 2. Brainstorm and restate the component breakdown. For new/unspecified UI, use
    the `frontend-design` skill to settle layout and visual direction first.
 3. Provision any missing shadcn primitives via `npx shadcn@latest add` (use the
